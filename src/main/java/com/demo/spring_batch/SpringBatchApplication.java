@@ -4,6 +4,7 @@ import org.springframework.batch.core.configuration.annotation.EnableBatchProces
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+// 스프링 배치의 설정과 빈을 사용하기 위함
 @EnableBatchProcessing
 @SpringBootApplication
 public class SpringBatchApplication {
