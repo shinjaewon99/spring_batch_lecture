@@ -6,47 +6,44 @@ import org.springframework.batch.core.Step;
 import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
+import org.springframework.batch.core.step.tasklet.Tasklet;
 import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
 
-@RequiredArgsConstructor
 @Configuration
 public class HelloJobConfiguration {
-    private final JobRepository jobRepository;
-    private final PlatformTransactionManager transactionManager;
-
     // Job -> step -> task 순으로 실행됨
     @Bean
-    public Job helloJob() {
+    public Job helloJob(JobRepository jobRepository, Step helloStep1, Step helloStep2) {
         return new JobBuilder("helloJob", jobRepository)
-                .start(helloStep1())
-                .next(helloStep2())
+                .start(helloStep1)
+                .next(helloStep2)
                 .build();
     }
 
     @Bean
-    public Step helloStep1() {
+    public Step helloStep1(JobRepository jobRepository,
+                           PlatformTransactionManager transactionManager) {
         return new StepBuilder("helloStep1", jobRepository)
-                .tasklet((contribution, chunkContext) -> {
+                .tasklet((testTasklet, chunkContext) -> {
                     System.out.println(" ============================");
                     System.out.println(" >> Hello Spring Batch!");
                     System.out.println(" ============================");
-
-                    // 원래는 task가 무한 반복이지만 상태를 FINISHED로 지정 -> 1회만 실행
                     return RepeatStatus.FINISHED;
                 }, transactionManager)
                 .build();
     }
 
-    public Step helloStep2() {
+    @Bean
+    public Step helloStep2(JobRepository jobRepository,
+                           PlatformTransactionManager transactionManager) {
         return new StepBuilder("helloStep2", jobRepository)
                 .tasklet((contribution, chunkContext) -> {
                     System.out.println(" ============================");
-                    System.out.println(" >> step2 was excuted");
+                    System.out.println(" >> step2 was executed");
                     System.out.println(" ============================");
-
                     return RepeatStatus.FINISHED;
                 }, transactionManager)
                 .build();

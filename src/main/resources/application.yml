@@ -1,1 +1,8 @@
-spring.application.name=spring_batch
+spring:
+  h2:
+    console:
+      enabled: true
+  datasource:
+    url: jdbc:h2:mem:db;MODE=MYSQL;
+    username: sa
+    password:
