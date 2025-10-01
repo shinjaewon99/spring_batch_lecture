@@ -31,6 +31,8 @@ public class HelloJobConfiguration {
                     System.out.println(" ============================");
                     System.out.println(" >> Hello Spring Batch!");
                     System.out.println(" ============================");
+
+                    // 원래는 task가 무한 반복이지만 상태를 FINISHED로 지정 -> 1회만 실행
                     return RepeatStatus.FINISHED;
                 }, transactionManager)
                 .build();
